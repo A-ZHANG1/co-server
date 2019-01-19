@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+    <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+<div style="height: 100%">
+    <el-row style="height: 500px">
+        <div id="editor_holder" style="height: 300px"></div>
+        <button id="submit">Submit</button>
+    </el-row>
+    <el-row>
+        <el-input v-model="contractId" placeholder="合同号"></el-input>
+    </el-row>
+    <el-row>
+        <div id="main" style="height: 500px"></div>
+    </el-row>
+</div>
+
+<script src="https://cdn.bootcss.com/json-editor/0.7.28/jsoneditor.js"></script>
+<script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.min.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script src="https://cdn.bootcss.com/dagre/0.8.2/dagre.min.js"></script>
+<script src="https://cdn.bootcss.com/element-ui/2.4.11/index.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    //    *  el-input values
+
+    /*
+     *json editor
+     */
+    var editor = new JSONEditor(document.getElementById('editor_holder'), {
+        schema: {
+            type: "object",
+            properties: {
+                contractId: {
+                    type: "string"
+                },
+                partyAId: {
+                    type: "string"
+                },
+                partyBId: {
+                    type: "string"
+                },
+                amount: {
+                    type: "string"
+                },
+                type: {
+                    type: "string",
+                    enum: [
+                        "purchaseContract",
+                        "sellingContract"
+                    ]
+                }
+            }
+        }
+    });
+    const domain = 'http://localhost:8398'
+
+    // 单击submit按钮触发事件
+    document.getElementById('submit').addEventListener('click', function () {
+        // 获取生成的json字符串
+        editor.getValue().amount=parseFloat(editor.getValue().amount)
+
+        $.ajax({
+            url: domain +'/contract/createContract',
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(editor.getValue()),
+            dataType: 'json',
+            success: function (res) {
+//                alert(res);
+            }
+        })
+    });
+
+
+    /*
+     *关系图
+     *
+     */
+    option = {
+        title: {
+            // text: "企业节点关系",
+            // subtext: "ZBH",
+            top: "top",
+            left: "center"
+        },
+        tooltip: {},
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    show: true,
+                    readOnly: true
+                },
+                restore: {
+                    show: true
+                },
+                saveAsImage: {
+                    show: true
+                }
+            }
+        },
+        animationDuration: 3000,
+        animationEasingUpdate: 'quinticInOut',
+        series: [{
+            name: '企业关系',
+            type: 'graph',
+            layout: 'force',
+
+            force: {
+                repulsion: 300
+            },
+            data: [{
+                "name": "三国演义",
+                "symbolSize": 50,
+                "value": 27
+
+            }, {
+                "name": "刘备2239",
+                "value": 15,
+                "symbolSize": 80,
+                "draggable": "true"
+            }, {
+                "name": "使君70",
+                "symbolSize": 3,
+                "draggable": "true",
+                "value": 1
+            }, {
+                "name": "玄德1770",
+                "symbolSize": 60,
+                "draggable": "true",
+                "value": 1
+            }],
+            links: [],
+            focusNodeAdjacency: true,
+            roam: true,
+            label: {
+                normal: {
+
+                    show: true,
+                    position: 'top',
+
+                }
+            },
+            lineStyle: {
+                normal: {
+                    color: 'source',
+                    curveness: 0,
+                    type: "solid"
+                }
+            }
+        }]
+    }
+
+    echarts.init(document.getElementById('main')).setOption(option);
+    // myChart.setOption(option);
+
+
+</script>
+</body>
+</html>
