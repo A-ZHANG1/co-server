@@ -13,6 +13,7 @@
         <el-input v-model="contractId" placeholder="合同号"></el-input>
     </el-row>
     <el-row>
+        <button id="graph">关系图</button>
         <div id="main" style="height: 500px"></div>
     </el-row>
 </div>
@@ -61,10 +62,9 @@
     // 单击submit按钮触发事件
     document.getElementById('submit').addEventListener('click', function () {
         // 获取生成的json字符串
-        editor.getValue().amount=parseFloat(editor.getValue().amount)
-
+        editor.getValue().amount = parseFloat(editor.getValue().amount)
         $.ajax({
-            url: domain +'/contract/createContract',
+            url: domain + '/contract/createContract',
             method: 'post',
             contentType: 'application/json',
             data: JSON.stringify(editor.getValue()),
@@ -80,83 +80,80 @@
      *关系图
      *
      */
-    option = {
-        title: {
-            // text: "企业节点关系",
-            // subtext: "ZBH",
-            top: "top",
-            left: "center"
-        },
-        tooltip: {},
-        toolbox: {
-            show: true,
-            feature: {
-                dataView: {
-                    show: true,
-                    readOnly: true
-                },
-                restore: {
-                    show: true
-                },
-                saveAsImage: {
-                    show: true
-                }
+
+    // 单击graph按钮触发事件
+    document.getElementById('graph').addEventListener('click', function () {
+        // 获取生成的json字符串
+        axios.get(domain + '/graph/getAllCompanies').then(function(res){
+            var companyData = res.data.obj;
+            console.log(companyData)
+
+            const nodes = [];
+            for(let co of companyData){
+                let node= {}
+                node['name']=co.companyName
+                node['symbolSize']=co.nodeWeight/300
+                node['value']=co.capital
+                nodes.push(node);
             }
-        },
-        animationDuration: 3000,
-        animationEasingUpdate: 'quinticInOut',
-        series: [{
-            name: '企业关系',
-            type: 'graph',
-            layout: 'force',
-
-            force: {
-                repulsion: 300
-            },
-            data: [{
-                "name": "三国演义",
-                "symbolSize": 50,
-                "value": 27
-
-            }, {
-                "name": "刘备2239",
-                "value": 15,
-                "symbolSize": 80,
-                "draggable": "true"
-            }, {
-                "name": "使君70",
-                "symbolSize": 3,
-                "draggable": "true",
-                "value": 1
-            }, {
-                "name": "玄德1770",
-                "symbolSize": 60,
-                "draggable": "true",
-                "value": 1
-            }],
-            links: [],
-            focusNodeAdjacency: true,
-            roam: true,
-            label: {
-                normal: {
-
+            console.log(nodes);
+            echarts.init(document.getElementById('main')).setOption({
+                title: {
+                    // text: "企业节点关系",
+                    // subtext: "ZBH",
+                    top: "top",
+                    left: "center"
+                },
+                tooltip: {},
+                toolbox: {
                     show: true,
-                    position: 'top',
+                    feature: {
+                        dataView: {
+                            show: true,
+                            readOnly: true
+                        },
+                        restore: {
+                            show: true
+                        },
+                        saveAsImage: {
+                            show: true
+                        }
+                    }
+                },
+                animationDuration: 3000,
+                animationEasingUpdate: 'quinticInOut',
+                series: [{
+                    name: '企业关系',
+                    type: 'graph',
+                    layout: 'force',
 
-                }
-            },
-            lineStyle: {
-                normal: {
-                    color: 'source',
-                    curveness: 0,
-                    type: "solid"
-                }
-            }
-        }]
-    }
+                    force: {
+                        repulsion: 300
+                    },
+                    data: nodes,
+                    links: companyLinks,
+                    focusNodeAdjacency: true,
+                    roam: true,
+                    label: {
+                        normal: {
 
-    echarts.init(document.getElementById('main')).setOption(option);
-    // myChart.setOption(option);
+                            show: true,
+                            position: 'top',
+
+                        }
+                    },
+                    lineStyle: {
+                        normal: {
+                            color: 'source',
+                            curveness: 0,
+                            type: "solid"
+                        }
+                    }
+                }]
+            });
+        });
+    });
+
 
 
 </script>

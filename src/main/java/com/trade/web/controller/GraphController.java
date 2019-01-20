@@ -23,10 +23,22 @@ public class GraphController {
     @Autowired
     CompanyService companyService;
 
+//    @Autowired
+//    LinkService linkService;
+
+    //公司，即图节点
     @GetMapping("/getAllCompanies")
     @ResponseBody
     @ApiOperation(value = "返回所有公司节点")
     public GeneralResponse<List<Company>> getCompanies(){
         return companyService.getAllCompanies();
     }
+
+//    @GetMapping("/getLinks")
+//    @ResponseBody
+//    @ApiOperation(value = "返回所有公司关联")
+//    public GeneralResponse<List<link>> getLinks(){
+//        return linkService.getLinks();
+//    }
+
 }
