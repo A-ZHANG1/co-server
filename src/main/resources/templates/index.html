@@ -38,21 +38,14 @@
                 contractId: {
                     type: "string"
                 },
-                partyAId: {
+                partyAName: {
                     type: "string"
                 },
-                partyBId: {
+                partyBName: {
                     type: "string"
                 },
                 amount: {
                     type: "string"
-                },
-                type: {
-                    type: "string",
-                    enum: [
-                        "purchaseContract",
-                        "sellingContract"
-                    ]
                 }
             }
         }
@@ -82,6 +75,7 @@
      */
 
     // 单击graph按钮触发事件
+    //https://carrylaw.github.io/fjs/2018/04/01/js07/
     document.getElementById('graph').addEventListener('click', function () {
         axios.get(domain + '/graph/getLinks').then(function(res){
             var linkData=res.data.obj;

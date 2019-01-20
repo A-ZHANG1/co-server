@@ -32,8 +32,7 @@ public class Company {
         this.nodeWeight = nodeWeight;
     }
 
-    public Company(String companyName, int capital) {
+    public Company(String companyName) {
         this.companyName = companyName;
-        this.capital = capital;
     }
 }

@@ -1,7 +1,11 @@
 package com.trade.logic.impl;
 
+import com.trade.data.mapper.CompanyMapper;
 import com.trade.data.mapper.ContractMapper;
+import com.trade.data.mapper.LinkMapper;
+import com.trade.data.model.Company;
 import com.trade.data.model.Contract;
+import com.trade.data.model.Link;
 import com.trade.logic.service.ContractService;
 import com.trade.web.response.GeneralResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +21,43 @@ public class ContractServiceImpl implements ContractService{
     @Autowired
     ContractMapper contractMapper;
 
-//    @Autowired
-//    LinkMapper linkMapper;
+    @Autowired
+    LinkMapper linkMapper;
+
+    @Autowired
+    CompanyMapper companyMapper;
 
     @Override
     public GeneralResponse<Contract> createContract(Contract contract) {
+
+        //数据库插入合同记录
+//        contractMapper.createContract(new Contract(contract.getPartyAName(),contract.getPartyBName(),contract.getAmount()));
         contractMapper.createContract(contract);
+
+        //新建公司属性为空的company节点
+        List<Company> companies=companyMapper.getCompanyByCompanyName(contract.getPartyAName());
+        if(companies.size()==0){
+            Company company=new Company(contract.getPartyAName());
+            companyMapper.insertCompany(company);
+        }
+
+        companies=companyMapper.getCompanyByCompanyName(contract.getPartyBName());
+        if(companies.size()==0){
+            Company company=new Company(contract.getPartyBName());
+            companyMapper.insertCompany(company);
+        }
+
+
+
+
+
+        //新建连接
+        Link link=new Link();
+        link.setPartyAName(contract.getPartyAName());
+        link.setPartyBName(contract.getPartyBName());
+        link.setLinkWeight(contract.getAmount());
+        linkMapper.createLink(link);
+
         return new GeneralResponse<>(contract);
     }
 
@@ -39,5 +74,6 @@ public class ContractServiceImpl implements ContractService{
         GeneralResponse<List<Contract>> resp=new GeneralResponse<>();
         List<Contract> contractList = contractMapper.getAllContracts();
         resp.setObj(contractList);
-        return resp;    }
+        return resp;
+    }
 }

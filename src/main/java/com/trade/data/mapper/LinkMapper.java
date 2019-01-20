@@ -1,6 +1,7 @@
 package com.trade.data.mapper;
 
 import com.trade.data.model.Link;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -13,4 +14,7 @@ import java.util.List;
 public interface LinkMapper {
     @Select("select * from Links")
     List<Link> getLinks();
+
+    @Insert("insert into Links (partyAName,partyBName,linkWeight) values (#{partyAName},#{partyBName},#{linkWeight})")
+    int createLink(Link link);
 }

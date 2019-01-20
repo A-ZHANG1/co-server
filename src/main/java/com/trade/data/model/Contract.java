@@ -17,16 +17,18 @@ public class Contract {
     @ApiModelProperty(value = "合同Id")
     private String contractId;
 
-    @ApiModelProperty(value = "出卖人Id")
-    private String partyAId;
+    @ApiModelProperty(value = "出卖公司名")
+    private String partyAName;
 
-    @ApiModelProperty(value = "买受人Id")
-    private String partyBId;
+    @ApiModelProperty(value = "买受公司名")
+    private String partyBName;
 
-    @ApiModelProperty(value = "合同类型.1=采购合同，2=销售合同")
-    private String type;
-
-    @ApiModelProperty(value = "合同金额")
+    @ApiModelProperty(value = "合同金额（万元）")
     private double amount;
 
+    public Contract(String partyAName, String partyBName, double amount) {
+        this.partyAName = partyAName;
+        this.partyBName = partyBName;
+        this.amount = amount;
+    }
 }

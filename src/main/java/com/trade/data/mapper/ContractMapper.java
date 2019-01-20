@@ -10,7 +10,9 @@ import java.util.List;
  */
 @Mapper
 public interface ContractMapper {
-    @Insert("insert into Contract (contractId, partyAId, partyBId, type, amount) values(#{contractId}, #{partyAId}, #{partyBId}, #{type}, #{amount})")
+    //keyProperty:model中的主键名
+    //keyColumn:DB中的主键名
+    @Insert("insert into Contract (contractId, partyAName, partyBName, amount) values(#{contractId}, #{partyAName}, #{partyBName}, #{amount})")
     @Options(useGeneratedKeys = true, keyProperty = "contractId", keyColumn = "contractId")
     int createContract(Contract contract);
 
