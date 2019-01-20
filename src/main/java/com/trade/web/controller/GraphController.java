@@ -1,7 +1,9 @@
 package com.trade.web.controller;
 
 import com.trade.data.model.Company;
+import com.trade.data.model.Link;
 import com.trade.logic.service.CompanyService;
+import com.trade.logic.service.LinkService;
 import com.trade.web.response.GeneralResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,8 +25,8 @@ public class GraphController {
     @Autowired
     CompanyService companyService;
 
-//    @Autowired
-//    LinkService linkService;
+    @Autowired
+    LinkService linkService;
 
     //公司，即图节点
     @GetMapping("/getAllCompanies")
@@ -34,11 +36,11 @@ public class GraphController {
         return companyService.getAllCompanies();
     }
 
-//    @GetMapping("/getLinks")
-//    @ResponseBody
-//    @ApiOperation(value = "返回所有公司关联")
-//    public GeneralResponse<List<link>> getLinks(){
-//        return linkService.getLinks();
-//    }
+    @GetMapping("/getLinks")
+    @ResponseBody
+    @ApiOperation(value = "返回所有公司关联")
+    public GeneralResponse<List<Link>> getLinks(){
+        return linkService.getLinks();
+    }
 
 }

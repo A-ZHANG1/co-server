@@ -83,73 +83,96 @@
 
     // 单击graph按钮触发事件
     document.getElementById('graph').addEventListener('click', function () {
-        // 获取生成的json字符串
-        axios.get(domain + '/graph/getAllCompanies').then(function(res){
-            var companyData = res.data.obj;
-            console.log(companyData)
-
-            const nodes = [];
-            for(let co of companyData){
-                let node= {}
-                node['name']=co.companyName
-                node['symbolSize']=co.nodeWeight/300
-                node['value']=co.capital
-                nodes.push(node);
+        axios.get(domain + '/graph/getLinks').then(function(res){
+            var linkData=res.data.obj;
+            const companyLinks=[];
+            for(let l of linkData){
+                let link={}
+                link['source']=l.partyAName;
+                link['target']=l.partyBName;
+                link['data']=l.linkWeight;
+                companyLinks.push(link);
             }
-            console.log(nodes);
-            echarts.init(document.getElementById('main')).setOption({
-                title: {
-                    // text: "企业节点关系",
-                    // subtext: "ZBH",
-                    top: "top",
-                    left: "center"
-                },
-                tooltip: {},
-                toolbox: {
-                    show: true,
-                    feature: {
-                        dataView: {
-                            show: true,
-                            readOnly: true
-                        },
-                        restore: {
-                            show: true
-                        },
-                        saveAsImage: {
-                            show: true
-                        }
-                    }
-                },
-                animationDuration: 3000,
-                animationEasingUpdate: 'quinticInOut',
-                series: [{
-                    name: '企业关系',
-                    type: 'graph',
-                    layout: 'force',
+            console.log(companyLinks);
+            //获取所有公司节点
+            axios.get(domain + '/graph/getAllCompanies').then(function(res){
+                var companyData = res.data.obj;
+                console.log(companyData)
 
-                    force: {
-                        repulsion: 300
+                const nodes = [];
+                for(let co of companyData){
+                    let node= {}
+                    node['name']=co.companyName
+                    node['symbolSize']=co.nodeWeight/300
+                    node['value']=co.capital
+                    nodes.push(node);
+                }
+                console.log(nodes);
+                echarts.init(document.getElementById('main')).setOption({
+                    title: {
+                        // text: "企业节点关系",
+                        // subtext: "ZBH",
+                        top: "top",
+                        left: "center"
                     },
-                    data: nodes,
-                    links: companyLinks,
-                    focusNodeAdjacency: true,
-                    roam: true,
-                    label: {
-                        normal: {
-
-                            show: true,
-                            position: 'top',
-
+                    tooltip: {},
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: {
+                                show: true,
+                                readOnly: true
+                            },
+                            restore: {
+                                show: true
+                            },
+                            saveAsImage: {
+                                show: true
+                            }
                         }
                     },
-                    lineStyle: {
-                        normal: {
-                            color: 'source',
-                            curveness: 0,
-                            type: "solid"
-                        }
-                    }
-                }]
+                    animationDuration: 3000,
+                    animationEasingUpdate: 'quinticInOut',
+                    series: [{
+                        name: '企业关系',
+                        type: 'graph',
+                        layout: 'force',
+
+                        force: {
+                            repulsion: 300
+                        },
+                        data: nodes,
+                        links: companyLinks,
+                        focusNodeAdjacency: true,
+                        roam: true,
+                        label: {
+                            normal: {
+
+                                show: true,
+                                position: 'top',
+
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                color: 'source',
+                                curveness: 0,
+                                type: "solid"
+                            }
+                        },
+                        edgeLabel: {
+                            normal: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: 10
+                                },
+                                formatter:function(companyLinks){
+                                    return companyLinks.nodeWeight
+                                }
+                            }
+                        },
+                    }]
+                });
             });
         });
     });
