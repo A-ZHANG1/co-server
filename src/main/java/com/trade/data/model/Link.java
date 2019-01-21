@@ -14,6 +14,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Link {
+    @ApiModelProperty(value = "主键id，创建时不传")
+    private int linkId;
+
     @ApiModelProperty(value = "节点A端，甲方名")
     private String partyAName;
 
@@ -23,4 +26,9 @@ public class Link {
     @ApiModelProperty(value = "节点权重")
     private double linkWeight;
 
+    public Link(String partyAName, String partyBName, double linkWeight) {
+        this.partyAName = partyAName;
+        this.partyBName = partyBName;
+        this.linkWeight = linkWeight;
+    }
 }

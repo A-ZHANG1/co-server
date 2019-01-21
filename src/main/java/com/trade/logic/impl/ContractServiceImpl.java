@@ -48,15 +48,18 @@ public class ContractServiceImpl implements ContractService{
         }
 
 
-
-
-
         //新建连接
-        Link link=new Link();
-        link.setPartyAName(contract.getPartyAName());
-        link.setPartyBName(contract.getPartyBName());
-        link.setLinkWeight(contract.getAmount());
-        linkMapper.createLink(link);
+        List<Link> links = linkMapper.getLinkByAB(contract.getPartyAName(),contract.getPartyBName());
+
+        if(links.size()== 0){
+            Link link=new Link(contract.getPartyAName(),contract.getPartyBName(),contract.getAmount());
+            linkMapper.createLink(link);
+        }else{
+            for (Link l : links){
+                l.setLinkWeight(l.getLinkWeight()+1);
+                linkMapper.updateLink(l);
+            }
+        }
 
         return new GeneralResponse<>(contract);
     }

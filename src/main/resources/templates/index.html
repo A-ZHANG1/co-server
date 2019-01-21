@@ -2,6 +2,7 @@
 <html lang="en" style="height: 100%">
 <head>
     <meta charset="utf-8">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body style="height: 100%; margin: 0">
 <div style="height: 100%">
@@ -14,16 +15,39 @@
     </el-row>
     <el-row>
         <button id="graph">关系图</button>
-        <div id="main" style="height: 500px"></div>
+        <div id="main" style="height: 5000px"></div>
     </el-row>
 </div>
 
+<!--公司信息录入框-->
+<div class="modal fade" tabindex="-1" role="dialog" id="companyModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                新公司信息录入
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="companyCapital" placeholder="该公司注册资本">
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://cdn.bootcss.com/json-editor/0.7.28/jsoneditor.js"></script>
 <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.min.js"></script>
 <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
 <script src="https://cdn.bootcss.com/dagre/0.8.2/dagre.min.js"></script>
 <script src="https://cdn.bootcss.com/element-ui/2.4.11/index.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.2.0/js/modal.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.2.0/js/button.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
     //    *  el-input values
@@ -75,7 +99,10 @@
      */
 
     // 单击graph按钮触发事件
-    //https://carrylaw.github.io/fjs/2018/04/01/js07/
+
+    let chart = echarts.init(document.getElementById('main'));
+    let companyCapital={}
+
     document.getElementById('graph').addEventListener('click', function () {
         axios.get(domain + '/graph/getLinks').then(function(res){
             var linkData=res.data.obj;
@@ -84,25 +111,35 @@
                 let link={}
                 link['source']=l.partyAName;
                 link['target']=l.partyBName;
-                link['data']=l.linkWeight;
+//                link['name']=Number(l.linkWeight);
+//                link['weight']=Number(l.linkWeight);
+                link['value']=Number(l.linkWeight);
                 companyLinks.push(link);
             }
-            console.log(companyLinks);
+//            console.log(companyLinks);
             //获取所有公司节点
             axios.get(domain + '/graph/getAllCompanies').then(function(res){
-                var companyData = res.data.obj;
-                console.log(companyData)
+                let companyData = res.data.obj;
 
                 const nodes = [];
                 for(let co of companyData){
                     let node= {}
                     node['name']=co.companyName
-                    node['symbolSize']=co.nodeWeight/300
-                    node['value']=co.capital
-                    nodes.push(node);
+                    node['draggable']='true'
+                    if(co.capital!=0){
+                        node['symbolSize']=co.nodeWeight/300
+                        node['value']=co.capital
+                        node['category']=1
+                    }else{
+                        node['symbolSize']=20
+                        node['value']=20
+                        node['category']=0
+                    }
+                    nodes.push(node)
+                    console.log(node)
+
                 }
-                console.log(nodes);
-                echarts.init(document.getElementById('main')).setOption({
+                chart.setOption({
                     title: {
                         // text: "企业节点关系",
                         // subtext: "ZBH",
@@ -135,13 +172,30 @@
                         force: {
                             repulsion: 300
                         },
+                        categories:[
+                            {
+                                name:'新录入公司',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#c9c9c9"
+                                    }
+                                }
+                            },
+                            {
+                                name:'既有公司',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#173e43"
+                                    }
+                                }
+                            }
+                        ],
                         data: nodes,
                         links: companyLinks,
                         focusNodeAdjacency: true,
                         roam: true,
                         label: {
                             normal: {
-
                                 show: true,
                                 position: 'top',
 
@@ -149,27 +203,38 @@
                         },
                         lineStyle: {
                             normal: {
-                                color: 'source',
+//                                color: 'source',
                                 curveness: 0,
                                 type: "solid"
-                            }
+                            },
+                            formatter:'{b}',
                         },
                         edgeLabel: {
                             normal: {
-                                show: true,
+                                show: false,
                                 textStyle: {
                                     fontSize: 10
-                                },
-                                formatter:function(companyLinks){
-                                    return companyLinks.nodeWeight
                                 }
-                            }
+                            },
+                            formatter:'{c}'
                         },
                     }]
                 });
             });
         });
     });
+
+    chart.on('click',function(params){
+        console.log(params)
+//        $('#companyModal').modal('show')
+        $('#companyModal').modal({show:true,backdrop:false});
+//        $('#companyCapital_input').
+//        if(params.data.category==0){
+//            axios.post(domain+'/graph/updateCompany',{
+//                data:0
+//            })
+//        }
+    })
 
 
 
