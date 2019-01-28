@@ -111,12 +111,9 @@
                 let link={}
                 link['source']=l.partyAName;
                 link['target']=l.partyBName;
-//                link['name']=Number(l.linkWeight);
-//                link['weight']=Number(l.linkWeight);
                 link['value']=Number(l.linkWeight);
                 companyLinks.push(link);
             }
-//            console.log(companyLinks);
             //获取所有公司节点
             axios.get(domain + '/graph/getAllCompanies').then(function(res){
                 let companyData = res.data.obj;
