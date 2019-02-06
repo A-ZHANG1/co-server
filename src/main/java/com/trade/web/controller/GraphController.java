@@ -3,8 +3,11 @@ package com.trade.web.controller;
 import com.trade.data.model.Company;
 import com.trade.data.model.Link;
 import com.trade.logic.service.CompanyService;
+import com.trade.logic.service.GraphService;
 import com.trade.logic.service.LinkService;
+import com.trade.logic.service.PageRankService;
 import com.trade.web.response.GeneralResponse;
+import com.trade.web.response.PageRankResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +29,67 @@ public class GraphController {
     CompanyService companyService;
 
     @Autowired
+    GraphService graphService;
+
+    @Autowired
     LinkService linkService;
 
-    //公司，即图节点
-    @GetMapping("/getAllCompanies")
+    @Autowired
+    PageRankService pageRankService;
+
+    @GetMapping("/getCompanyWeight")
     @ResponseBody
-    @ApiOperation(value = "返回所有公司节点")
-    public GeneralResponse<List<Company>> getCompanies(){
-        return companyService.getAllCompanies();
+    @ApiOperation(value = "返回该公司权重计算结果")
+    public GeneralResponse<Double> getCompanyWeight(String companyName){
+        return graphService.getCompanyWeight(companyName);
     }
 
-    @GetMapping("/getLinks")
+
+    //返回小图的Links
+    @GetMapping("/getLinksSurroundingCompany")
     @ResponseBody
-    @ApiOperation(value = "返回所有公司关联")
-    public GeneralResponse<List<Link>> getLinks(){
+    @ApiOperation(value = "返回当前公司三层以内的关联")
+    public GeneralResponse<List<Link>> getLinksSurroundingCompany(String companyName){
+        return graphService.getLinksSurroundingCompany(companyName);
+    }
+    //返回小图的nodes
+    @GetMapping("/getNodesSurroundingCompany")
+    @ResponseBody
+    @ApiOperation(value = "返回当前公司三层以内的节点")
+    public GeneralResponse<List<Company>> getNodesSurroundingCompany(String companyName){
+        return graphService.getNodesSurroundingCompany(companyName);
+    }
+
+@GetMapping("/getAllCompanies")
+@ResponseBody
+@ApiOperation(value = "返回大图所有Node(Company)")
+public GeneralResponse<List<Company>> getCompanies(){
+    return companyService.getAllCompanies();
+}
+
+    @GetMapping("/getAllLinks")
+    @ResponseBody
+    @ApiOperation(value = "返回大图所有Link(Link)")
+    public GeneralResponse<List<Link>> getAllLinks(){
         return linkService.getLinks();
+    }
+
+    //legacy: pageRank确定节点权重和回退
+
+    //调用pageRank算法更新节点权重，返回第count次迭代的节点权重
+    @GetMapping("/getPageRankByStep")
+    @ResponseBody
+    @ApiOperation(value = "更新公司节点权重，返回每轮迭代更新情况")
+    public GeneralResponse<PageRankResponse> pageRankCompany(int iter){
+        return pageRankService.pageRankCompany(iter);
+    }
+
+    //回退节点权重到初始值（公司注册资本）
+    @GetMapping("/resetNodeWeight")
+    @ResponseBody
+    @ApiOperation(value = "更新公司权重")
+    public GeneralResponse<List<Company>> resetCompanyNodeWeight(){
+        return pageRankService.resetCompanyNodeWeight();
     }
 
 }

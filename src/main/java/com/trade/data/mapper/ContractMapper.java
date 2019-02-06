@@ -12,12 +12,15 @@ import java.util.List;
 public interface ContractMapper {
     //keyProperty:model中的主键名
     //keyColumn:DB中的主键名
-    @Insert("insert into Contract (contractId, partyAName, partyBName, amount) values(#{contractId}, #{partyAName}, #{partyBName}, #{amount})")
+    @Insert("insert into Contract (contractId, partyAName, partyBName, amount,startTime,endTime) values(#{contractId}, #{partyAName}, #{partyBName}, #{amount}),#{startTime},#{endTime}")
     @Options(useGeneratedKeys = true, keyProperty = "contractId", keyColumn = "contractId")
     int createContract(Contract contract);
 
     @Select("select * from Contract where contractId=#{contractId}")
     List<Contract> getContractByContractId(@Param("contractId") String contractId);
+
+    @Select("select * from Contract where partyAName=#{companyName} or partyBName=#{companyName}")
+    List<Contract> getContractsOfCompanyByCompanyName(@Param("companyName") String companyName);
 
     @Select("select * from Contract")
     List<Contract> getAllContracts();

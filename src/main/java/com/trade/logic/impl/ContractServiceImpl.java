@@ -11,6 +11,7 @@ import com.trade.web.response.GeneralResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,18 +32,17 @@ public class ContractServiceImpl implements ContractService{
     public GeneralResponse<Contract> createContract(Contract contract) {
 
         //数据库插入合同记录
-//        contractMapper.createContract(new Contract(contract.getPartyAName(),contract.getPartyBName(),contract.getAmount()));
         contractMapper.createContract(contract);
 
         //新建公司属性为空的company节点
-        List<Company> companies=companyMapper.getCompanyByCompanyName(contract.getPartyAName());
-        if(companies.size()==0){
+         Company partyA = companyMapper.getCompanyByCompanyName(contract.getPartyAName());
+        if(partyA == null){
             Company company=new Company(contract.getPartyAName());
             companyMapper.insertCompany(company);
         }
 
-        companies=companyMapper.getCompanyByCompanyName(contract.getPartyBName());
-        if(companies.size()==0){
+        Company partyB = companyMapper.getCompanyByCompanyName(contract.getPartyBName());
+        if(partyB == null){
             Company company=new Company(contract.getPartyBName());
             companyMapper.insertCompany(company);
         }
@@ -78,5 +78,36 @@ public class ContractServiceImpl implements ContractService{
         List<Contract> contractList = contractMapper.getAllContracts();
         resp.setObj(contractList);
         return resp;
+    }
+
+    @Override
+    public GeneralResponse<Contract> randomizeContract() {
+//        int numContract = 20;
+//
+//        GeneralResponse<List<Contract>> resp=new GeneralResponse<>();
+//        List<Company> allCompanies=companyMapper.getCompanies();
+//        int range=allCompanies.size();
+//
+//        //随机生成numContract个合同
+////        List<Integer> parties=new ArrayList<Integer>();
+//        for(int i =0;i<numContract;i++){
+//
+//            int partyAId=(int)(Math.random()*range);
+//            int partyBId=(int)(Math.random()*range);
+//
+//            while(partyBId == partyAId){
+//                partyBId = (int)(Math.random()*range);
+//            }
+//
+//            String partyAName = companyMapper.getCompanyByCompanyId()
+//            Contract contract=new Contract();
+//
+//            List<Contract> contractList = contractMapper.createContract(contract);
+//
+//        }
+//
+////        resp.setObj(contractList);
+//        return resp;
+        return null;
     }
 }

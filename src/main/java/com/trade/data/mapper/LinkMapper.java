@@ -1,5 +1,6 @@
 package com.trade.data.mapper;
 
+import com.trade.data.model.Company;
 import com.trade.data.model.Link;
 import org.apache.ibatis.annotations.*;
 
@@ -22,4 +23,13 @@ public interface LinkMapper {
 
     @Update("update Links SET linkWeight=#{linkWeight} where linkId=#{linkId}")
     void updateLink(Link link);
+
+    @Select("select * from Links where partyAName=#{companyName}")
+    List<Link> getLinksStartFromC(Company c);
+
+    @Select("select * from Links where partyBName=#{companyName}")
+    List<Link> getLinksPointToC(Company c);
+
+    @Select("select * from Links where partyAName=#{companyName} or partyBName=#{companyName}")
+    List<Link> getLinkedNodeOfC(Company c);
 }

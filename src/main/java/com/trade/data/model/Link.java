@@ -23,7 +23,7 @@ public class Link {
     @ApiModelProperty(value = "节点B端，乙方名")
     private String partyBName;
 
-    @ApiModelProperty(value = "节点权重")
+    @ApiModelProperty(value = "链接权重，合同金额之和，交易次数维度被合并到金额维度")
     private double linkWeight;
 
     public Link(String partyAName, String partyBName, double linkWeight) {

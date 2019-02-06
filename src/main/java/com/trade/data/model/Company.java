@@ -21,12 +21,12 @@ public class Company {
     private String companyName;
 
     @ApiModelProperty(value="注册资本，value")
-    private int capital;
+    private double capital;
 
     @ApiModelProperty(value="节点权重，symbolSize")
-    private int nodeWeight;
+    private double nodeWeight;
 
-    public Company(String companyName, int capital, int nodeWeight) {
+    public Company(String companyName, double capital, double nodeWeight) {
         this.companyName = companyName;
         this.capital = capital;
         this.nodeWeight = nodeWeight;
@@ -34,5 +34,31 @@ public class Company {
 
     public Company(String companyName) {
         this.companyName = companyName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Company company = (Company) o;
+
+        if (Double.compare(company.capital, capital) != 0) return false;
+        if (Double.compare(company.nodeWeight, nodeWeight) != 0) return false;
+        if (companyId != null ? !companyId.equals(company.companyId) : company.companyId != null) return false;
+        return companyName != null ? companyName.equals(company.companyName) : company.companyName == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = companyId != null ? companyId.hashCode() : 0;
+        result = 31 * result + (companyName != null ? companyName.hashCode() : 0);
+        temp = Double.doubleToLongBits(capital);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(nodeWeight);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }

@@ -48,7 +48,7 @@ public class PageRankServiceImpl implements PageRankService {
             for (Company c : companies) {
                 List<Link> links = linkMapper.getLinksStartFromC(c);
                 for (Link l : links) {
-                    double linkedNodeWeight = companyMapper.getCompanyByCompanyName(l.getPartyBName()).get(0).getNodeWeight();
+                    double linkedNodeWeight = companyMapper.getCompanyByCompanyName(l.getPartyBName()).getNodeWeight();
                     temp = l.getLinkWeight() * linkedNodeWeight / links.size();
                     sum += temp;
                 }

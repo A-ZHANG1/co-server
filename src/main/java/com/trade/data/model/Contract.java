@@ -26,9 +26,28 @@ public class Contract {
     @ApiModelProperty(value = "合同金额（万元）")
     private double amount;
 
+    @ApiModelProperty(value = "合同开始时间")
+    private double startTime;
+
+    @ApiModelProperty(value = "合同结束时间")
+    private double endTime;
+
+    @ApiModelProperty(value = "合同地点")
+    private double location;
+
+
     public Contract(String partyAName, String partyBName, double amount) {
         this.partyAName = partyAName;
         this.partyBName = partyBName;
         this.amount = amount;
+    }
+
+    public Contract(String partyAName, String partyBName, double amount, double startTime, double endTime, double location) {
+        this.partyAName = partyAName;
+        this.partyBName = partyBName;
+        this.amount = amount;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.location = location;
     }
 }

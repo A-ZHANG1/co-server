@@ -1,10 +1,7 @@
 package com.trade.data.mapper;
 
 import com.trade.data.model.Company;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -24,5 +21,11 @@ public interface CompanyMapper {
     List<Company> getCompanies();
 
     @Select("select * from Company where companyName=#{companyName}")
-    List<Company> getCompanyByCompanyName(String companyName);
+    Company getCompanyByCompanyName(String companyName);
+
+    @Select("select SUM(nodeWeight) from Company")
+    Double getNodeWeightSum();
+
+    @Update("update Company SET nodeWeight=#{nodeWeight} where companyId=#{companyId}")
+    void updateCompanyNodeWeight(Company company);
 }

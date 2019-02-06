@@ -41,4 +41,11 @@ public class ContractController {
     public GeneralResponse<Contract> createContract(@RequestBody Contract contract) {
         return contractService.createContract(contract);
     }
+
+    @PostMapping("/randomizeContract")
+    @ResponseBody
+    @ApiOperation(value = "随机生成合同合同")
+    public GeneralResponse<Contract> randomizeContract() {
+        return contractService.randomizeContract();
+    }
 }
