@@ -19,7 +19,7 @@ public interface LinkMapper {
     int createLink(Link link);
 
     @Select("select * from Links where partyAName=#{partyAName} and partyBName=#{partyBName}")
-    List<Link> getLinkByAB(@Param("partyAName") String partyAName, @Param("partyBName") String partyBName);
+    List<Link> getLinksByAB(@Param("partyAName") String partyAName, @Param("partyBName") String partyBName);
 
     @Update("update Links SET linkWeight=#{linkWeight} where linkId=#{linkId}")
     void updateLink(Link link);
@@ -31,5 +31,5 @@ public interface LinkMapper {
     List<Link> getLinksPointToC(Company c);
 
     @Select("select * from Links where partyAName=#{companyName} or partyBName=#{companyName}")
-    List<Link> getLinkedNodeOfC(Company c);
+    List<Link> getLinkedNodesOfC(Company c);
 }

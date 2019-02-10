@@ -28,11 +28,12 @@ public class GraphServiceImpl implements GraphService{
     @Autowired
     LinkService linkService;
 
+    List<Company> nodesSurroundingCompany;
 
     public Map<Company,Integer> getSubGraph(String companyName){
 
-        LinkedList<Company> bfsQueue = new LinkedList<Company>();//用linkedlist实现队列存放一次要遍历的元素
-        LinkedList<Integer> depthQueue = new LinkedList<Integer>();//用linkedlist实现队列存放元素层数
+        LinkedList<Company> bfsQueue = new LinkedList<Company>();//用linkedlist实现队列,存放一次要遍历的元素
+        LinkedList<Integer> depthQueue = new LinkedList<Integer>();//用linkedlist实现队列,存放元素层数
 
         Map<Company,Integer> visitedMap = new HashMap<>();
 
@@ -40,10 +41,13 @@ public class GraphServiceImpl implements GraphService{
         depthQueue.add(0);
 
         while(!bfsQueue.isEmpty()){
+
             Company companyNode = bfsQueue.remove();
             int depth=depthQueue.remove();
             visitedMap.put(companyNode,depth);
+
             for(Company c : linkService.getLinkedNodesOfC(companyNode)){
+
                 if(!visitedMap.containsKey(c)){
                     bfsQueue.add(c);
                     depthQueue.add(depth+1);
@@ -58,7 +62,6 @@ public class GraphServiceImpl implements GraphService{
 
         GeneralResponse<Double> resp=new GeneralResponse<>();
 
-
         double companyWeight = 0;
 
 
@@ -71,9 +74,9 @@ public class GraphServiceImpl implements GraphService{
         GeneralResponse<List<Company>> resp = new GeneralResponse<>();
         Map<Company,Integer> visitedMap = this.getSubGraph(companyName);
 
-        List<Company> nodesSurroundingCompany;
+//        List<Company> nodesSurroundingCompany;
 
-        nodesSurroundingCompany=visitedMap.entrySet().stream().filter(e -> e.getValue()<3)
+        nodesSurroundingCompany = visitedMap.entrySet().stream().filter(e -> e.getValue()<3)
                 .map(e->e.getKey()).collect(Collectors.toList());
 
         resp.setObj(nodesSurroundingCompany);
@@ -83,6 +86,21 @@ public class GraphServiceImpl implements GraphService{
     @Override
     public GeneralResponse<List<Link>> getLinksSurroundingCompany(String companyName) {
         GeneralResponse<List<Link>> resp = new GeneralResponse<>();
+
+        List<Link> linksSurroundingCompany = new ArrayList<>();
+
+        for(Company c : nodesSurroundingCompany){
+
+            for(Link l : linkMapper.getLinksStartFromC(c)){
+                Company compCLinkedTo = companyMapper.getCompanyByCompanyName(l.getPartyBName());
+                if(nodesSurroundingCompany.contains(compCLinkedTo)
+                        && !linksSurroundingCompany.contains(l)){
+                    linksSurroundingCompany.add(l);
+                }
+            }
+        }
+
+        resp.setObj(linksSurroundingCompany);
 
         return resp;
     }

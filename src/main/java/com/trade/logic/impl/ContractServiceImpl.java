@@ -49,7 +49,7 @@ public class ContractServiceImpl implements ContractService{
 
 
         //新建连接
-        List<Link> links = linkMapper.getLinkByAB(contract.getPartyAName(),contract.getPartyBName());
+        List<Link> links = linkMapper.getLinksByAB(contract.getPartyAName(),contract.getPartyBName());
 
         if(links.size()== 0){
             Link link=new Link(contract.getPartyAName(),contract.getPartyBName(),contract.getAmount());
