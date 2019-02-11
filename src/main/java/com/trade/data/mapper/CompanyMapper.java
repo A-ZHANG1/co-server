@@ -23,6 +23,9 @@ public interface CompanyMapper {
     @Select("select * from Company where companyName=#{companyName}")
     Company getCompanyByCompanyName(String companyName);
 
+    @Select("select * from Company where companyId=#{companyId}")
+    Company getCompanyByCompanyId(int companyId);
+
     @Select("select SUM(nodeWeight) from Company")
     Double getNodeWeightSum();
 

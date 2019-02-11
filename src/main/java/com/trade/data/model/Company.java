@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Company {
     @ApiModelProperty(value = "公司Id，主键，创建时不传")
-    private String companyId;
+    private int companyId;
 
     @ApiModelProperty(value = "公司名")
     private String companyName;
@@ -25,6 +25,12 @@ public class Company {
 
     @ApiModelProperty(value="节点权重，symbolSize")
     private double nodeWeight;
+
+    @ApiModelProperty(value="是否为核心企业，是1否0")
+    private int core;
+
+    @ApiModelProperty(value="企业类型")
+    private int type;
 
     public Company(String companyName, double capital, double nodeWeight) {
         this.companyName = companyName;
@@ -43,9 +49,11 @@ public class Company {
 
         Company company = (Company) o;
 
+        if (companyId != company.companyId) return false;
         if (Double.compare(company.capital, capital) != 0) return false;
         if (Double.compare(company.nodeWeight, nodeWeight) != 0) return false;
-        if (companyId != null ? !companyId.equals(company.companyId) : company.companyId != null) return false;
+        if (core != company.core) return false;
+        if (type != company.type) return false;
         return companyName != null ? companyName.equals(company.companyName) : company.companyName == null;
     }
 
@@ -53,12 +61,14 @@ public class Company {
     public int hashCode() {
         int result;
         long temp;
-        result = companyId != null ? companyId.hashCode() : 0;
+        result = companyId;
         result = 31 * result + (companyName != null ? companyName.hashCode() : 0);
         temp = Double.doubleToLongBits(capital);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(nodeWeight);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + core;
+        result = 31 * result + type;
         return result;
     }
 }

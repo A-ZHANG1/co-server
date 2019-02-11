@@ -12,4 +12,4 @@ public interface CompanyService {
 
     GeneralResponse<List<Company>> getAllCompanies();
 
-}
+ }

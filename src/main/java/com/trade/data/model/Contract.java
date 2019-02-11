@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 /**
  * Created by Wayne.A.Z on 2019/1/18.
  */
@@ -15,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Contract {
     @ApiModelProperty(value = "合同Id")
-    private String contractId;
+    private int contractId;
 
     @ApiModelProperty(value = "出卖公司名")
     private String partyAName;
@@ -27,27 +29,24 @@ public class Contract {
     private double amount;
 
     @ApiModelProperty(value = "合同开始时间")
-    private double startTime;
+    private String startTime;
 
     @ApiModelProperty(value = "合同结束时间")
-    private double endTime;
+    private String endTime;
 
     @ApiModelProperty(value = "合同地点")
-    private double location;
+    private String location;
 
+    @ApiModelProperty(value = "合同类型")
+    private String type;
 
-    public Contract(String partyAName, String partyBName, double amount) {
-        this.partyAName = partyAName;
-        this.partyBName = partyBName;
-        this.amount = amount;
-    }
-
-    public Contract(String partyAName, String partyBName, double amount, double startTime, double endTime, double location) {
+    public Contract(String partyAName, String partyBName, double amount, String startTime, String endTime, String location,String type) {
         this.partyAName = partyAName;
         this.partyBName = partyBName;
         this.amount = amount;
         this.startTime = startTime;
         this.endTime = endTime;
         this.location = location;
+        this.type = type;
     }
 }

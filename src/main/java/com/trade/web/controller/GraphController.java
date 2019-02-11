@@ -37,6 +37,22 @@ public class GraphController {
     @Autowired
     PageRankService pageRankService;
 
+    //返回小图的nodes
+    @GetMapping("/getNodesSurroundingCompany")
+    @ResponseBody
+    @ApiOperation(value = "返回当前公司三层连接以内的Node(Company)")
+    public GeneralResponse<List<Company>> getNodesSurroundingCompany(String companyName){
+        return graphService.getNodesSurroundingCompany(companyName);
+    }
+
+    //返回小图的Links
+    @GetMapping("/getLinksSurroundingCompany")
+    @ResponseBody
+    @ApiOperation(value = "返回当前公司三层连接以内的Links")
+    public GeneralResponse<List<Link>> getLinksSurroundingCompany(String companyName){
+        return graphService.getLinksSurroundingCompany(companyName);
+    }
+
     @GetMapping("/getCompanyWeight")
     @ResponseBody
     @ApiOperation(value = "返回该公司权重计算结果")
@@ -44,26 +60,10 @@ public class GraphController {
         return graphService.getCompanyWeight(companyName);
     }
 
-
-    //返回小图的Links
-    @GetMapping("/getLinksSurroundingCompany")
+    @GetMapping("/getAllCompanies")
     @ResponseBody
-    @ApiOperation(value = "返回当前公司三层以内的关联")
-    public GeneralResponse<List<Link>> getLinksSurroundingCompany(String companyName){
-        return graphService.getLinksSurroundingCompany(companyName);
-    }
-    //返回小图的nodes
-    @GetMapping("/getNodesSurroundingCompany")
-    @ResponseBody
-    @ApiOperation(value = "返回当前公司三层以内的节点")
-    public GeneralResponse<List<Company>> getNodesSurroundingCompany(String companyName){
-        return graphService.getNodesSurroundingCompany(companyName);
-    }
-
-@GetMapping("/getAllCompanies")
-@ResponseBody
-@ApiOperation(value = "返回大图所有Node(Company)")
-public GeneralResponse<List<Company>> getCompanies(){
+    @ApiOperation(value = "返回大图所有Node(Company)")
+    public GeneralResponse<List<Company>> getCompanies(){
     return companyService.getAllCompanies();
 }
 
@@ -74,12 +74,14 @@ public GeneralResponse<List<Company>> getCompanies(){
         return linkService.getLinks();
     }
 
-    //legacy: pageRank确定节点权重和回退
 
+    /*
+    *legacy: pageRank确定节点权重和回退
+    */
     //调用pageRank算法更新节点权重，返回第count次迭代的节点权重
     @GetMapping("/getPageRankByStep")
     @ResponseBody
-    @ApiOperation(value = "更新公司节点权重，返回每轮迭代更新情况")
+    @ApiOperation(value = "legacy:更新公司节点权重，返回每轮迭代更新情况")
     public GeneralResponse<PageRankResponse> pageRankCompany(int iter){
         return pageRankService.pageRankCompany(iter);
     }
@@ -87,7 +89,7 @@ public GeneralResponse<List<Company>> getCompanies(){
     //回退节点权重到初始值（公司注册资本）
     @GetMapping("/resetNodeWeight")
     @ResponseBody
-    @ApiOperation(value = "更新公司权重")
+    @ApiOperation(value = "legacy:回退公司权重")
     public GeneralResponse<List<Company>> resetCompanyNodeWeight(){
         return pageRankService.resetCompanyNodeWeight();
     }

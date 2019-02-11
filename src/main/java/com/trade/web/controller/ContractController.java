@@ -1,6 +1,9 @@
 package com.trade.web.controller;
 
+import com.trade.data.mapper.CompanyMapper;
+import com.trade.data.model.Company;
 import com.trade.data.model.Contract;
+import com.trade.logic.service.CompanyService;
 import com.trade.logic.service.ContractService;
 import com.trade.web.response.GeneralResponse;
 import io.swagger.annotations.Api;
@@ -45,7 +48,8 @@ public class ContractController {
     @PostMapping("/randomizeContract")
     @ResponseBody
     @ApiOperation(value = "随机生成合同合同")
-    public GeneralResponse<Contract> randomizeContract() {
+    public GeneralResponse<List<Contract>> randomizeContract() {
         return contractService.randomizeContract();
     }
+
 }

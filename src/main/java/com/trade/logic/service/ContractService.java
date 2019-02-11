@@ -16,5 +16,5 @@ public interface ContractService {
 
     GeneralResponse<List<Contract>> getAllContracts();
 
-    GeneralResponse<Contract> randomizeContract();
+    GeneralResponse<List<Contract>> randomizeContract();
 }
