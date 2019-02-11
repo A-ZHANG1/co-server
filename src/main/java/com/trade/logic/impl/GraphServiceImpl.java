@@ -28,7 +28,8 @@ public class GraphServiceImpl implements GraphService{
     @Autowired
     LinkService linkService;
 
-    List<Company> nodesSurroundingCompany;
+    List<Company> nodesSurroundingCompany = new ArrayList<>();
+    List<Link> linksSurroundingCompany = new ArrayList<>();
 
     public Map<Company,Integer> getSubGraph(String companyName){
 
@@ -57,17 +58,6 @@ public class GraphServiceImpl implements GraphService{
         return visitedMap;
     }
 
-    @Override
-    public GeneralResponse<Double> getCompanyWeight(String companyName) {
-
-        GeneralResponse<Double> resp=new GeneralResponse<>();
-
-        double companyWeight = 0;
-
-
-        resp.setObj(companyWeight);
-        return resp;
-    }
 
     @Override
     public GeneralResponse<List<Company>> getNodesSurroundingCompany(String companyName) {
@@ -75,6 +65,8 @@ public class GraphServiceImpl implements GraphService{
         Map<Company,Integer> visitedMap = this.getSubGraph(companyName);
 
 //        List<Company> nodesSurroundingCompany;
+        nodesSurroundingCompany.clear();
+        linksSurroundingCompany.clear();
 
         nodesSurroundingCompany = visitedMap.entrySet().stream().filter(e -> e.getValue()<3)
                 .map(e->e.getKey()).collect(Collectors.toList());
@@ -85,9 +77,10 @@ public class GraphServiceImpl implements GraphService{
 
     @Override
     public GeneralResponse<List<Link>> getLinksSurroundingCompany(String companyName) {
+        //先调用getNodesSurroundingCompany()
         GeneralResponse<List<Link>> resp = new GeneralResponse<>();
 
-        List<Link> linksSurroundingCompany = new ArrayList<>();
+//        List<Link> linksSurroundingCompany = new ArrayList<>();
 
         for(Company c : nodesSurroundingCompany){
 
@@ -102,6 +95,21 @@ public class GraphServiceImpl implements GraphService{
 
         resp.setObj(linksSurroundingCompany);
 
+        return resp;
+    }
+
+    @Override
+    public GeneralResponse<Double> getCompanyWeight(String companyName) {
+        //需要先调用getNodesSurroundingCompany和getLinksSurroundingCompany
+        GeneralResponse<Double> resp=new GeneralResponse<>();
+
+        double companyWeight = 0;
+        for(Link l : linksSurroundingCompany){
+            companyWeight += l.getLinkWeight();
+        }
+
+        companyWeight = companyWeight/1000;
+        resp.setObj(companyWeight);
         return resp;
     }
 
