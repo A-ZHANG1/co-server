@@ -71,7 +71,14 @@ public class GraphController {
     @ResponseBody
     @ApiOperation(value = "返回大图所有Link(Link)")
     public GeneralResponse<List<Link>> getAllLinks(){
-        return linkService.getLinks();
+        return linkService.getAllLinks();
+    }
+
+    @GetMapping("/showCompanyInfo")
+    @ResponseBody
+    @ApiOperation(value = "返回该公司所有信息")
+    public GeneralResponse<Company> showCompanyInfo(String companyName){
+      return companyService.showCompanyInfo(companyName);
     }
 
 

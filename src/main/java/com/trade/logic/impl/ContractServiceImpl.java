@@ -32,7 +32,9 @@ public class ContractServiceImpl implements ContractService{
     @Autowired
     CompanyMapper companyMapper;
 
-    @Override
+    List<Contract> contractList = new ArrayList<>();
+
+  @Override
     public GeneralResponse<Contract> createContract(Contract contract) {
 
         //数据库插入合同记录
@@ -114,7 +116,7 @@ public class ContractServiceImpl implements ContractService{
         return rtn;
     }
 
-    public Contract generateContract(Integer partyAId, Integer partyBId){
+    private Contract generateContract(Integer partyAId, Integer partyBId){
 
         Company a = companyMapper.getCompanyByCompanyId(partyAId);
         String partyAName = a.getCompanyName();
@@ -141,15 +143,32 @@ public class ContractServiceImpl implements ContractService{
         return contract;
     }
 
+  //由生成的合同补全link
+  private void setLinks(){
+    for(Contract c : contractMapper.getAllContracts()){
+      List<Link> links = linkMapper.getLinksByAB(c.getPartyAName(),c.getPartyBName());
+
+      if(links.size()== 0){
+        Link link=new Link(c.getPartyAName(),c.getPartyBName(),c.getAmount());
+        linkMapper.createLink(link);
+      }else{
+        for (Link l : links){
+          l.setLinkWeight(l.getLinkWeight()+ c.getAmount());
+          linkMapper.updateLink(l);
+        }
+      }
+    }
+  }
+
     @Override
     public GeneralResponse<List<Contract>> randomizeContract() {
         GeneralResponse<List<Contract>> resp=new GeneralResponse<>();
         List<Company> allCompanies=companyMapper.getCompanies();
-        List<Contract> contractList = new ArrayList<>();
+//        List<Contract> contractList = new ArrayList<>();
 
         int range=allCompanies.size();
 
-        for(int i =0;i<10000;i++){
+        for(int i =0;i<1000;i++){
 
             int partyAId=(int)(Math.random()*range) + 1;
             int partyBId=(int)(Math.random()*range) + 1;
@@ -162,9 +181,12 @@ public class ContractServiceImpl implements ContractService{
             contractList.add(newContract);
             contractMapper.createContract(newContract);
         }
+        this.setLinks();
 
         resp.setObj(contractList);
         return resp;
     }
+
+//    public void rollBack
 
 }

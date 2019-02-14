@@ -54,6 +54,7 @@ public class GraphServiceImpl implements GraphService{
                     depthQueue.add(depth+1);
                 }
             }
+            if(depth > 3) break;
         }
         return visitedMap;
     }

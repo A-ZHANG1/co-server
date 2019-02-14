@@ -29,6 +29,9 @@ public interface CompanyMapper {
     @Select("select SUM(nodeWeight) from Company")
     Double getNodeWeightSum();
 
+  @Select("select COUNT(DISTINCT companyName) from Company")
+  Integer getCompanyNum();
+
     @Update("update Company SET nodeWeight=#{nodeWeight} where companyId=#{companyId}")
     void updateCompanyNodeWeight(Company company);
 }

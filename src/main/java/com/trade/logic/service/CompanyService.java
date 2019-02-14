@@ -12,4 +12,6 @@ public interface CompanyService {
 
     GeneralResponse<List<Company>> getAllCompanies();
 
- }
+    GeneralResponse<Company> showCompanyInfo(String companyName);
+
+  }

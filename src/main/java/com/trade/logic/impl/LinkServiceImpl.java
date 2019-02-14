@@ -24,9 +24,9 @@ public class LinkServiceImpl implements LinkService{
     CompanyMapper companyMapper;
 
     @Override
-    public GeneralResponse<List<Link>> getLinks() {
+    public GeneralResponse<List<Link>> getAllLinks() {
         GeneralResponse<List<Link>> resp =new GeneralResponse<>();
-        List<Link> links=linkMapper.getLinks();
+        List<Link> links=linkMapper.getAllLinks();
         resp.setObj(links);
         return resp;
     }

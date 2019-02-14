@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface LinkMapper {
     @Select("select * from Links")
-    List<Link> getLinks();
+    List<Link> getAllLinks();
 
     @Insert("insert into Links (partyAName,partyBName,linkWeight) values (#{partyAName},#{partyBName},#{linkWeight})")
     @Options(useGeneratedKeys = true, keyProperty = "linkId", keyColumn = "linkId")
