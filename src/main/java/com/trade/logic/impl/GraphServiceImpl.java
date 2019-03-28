@@ -44,7 +44,7 @@ public class GraphServiceImpl implements GraphService{
         while(!bfsQueue.isEmpty()){
 
             Company companyNode = bfsQueue.remove();
-            int depth=depthQueue.remove();
+            int depth = depthQueue.remove();
             visitedMap.put(companyNode,depth);
 
             for(Company c : linkService.getLinkedNodesOfC(companyNode)){

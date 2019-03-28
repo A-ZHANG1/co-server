@@ -74,13 +74,6 @@ public class GraphController {
         return linkService.getAllLinks();
     }
 
-    @GetMapping("/showCompanyInfo")
-    @ResponseBody
-    @ApiOperation(value = "返回该公司所有信息")
-    public GeneralResponse<Company> showCompanyInfo(String companyName){
-      return companyService.showCompanyInfo(companyName);
-    }
-
 
     /*
     *legacy: pageRank确定节点权重和回退

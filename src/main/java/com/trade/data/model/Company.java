@@ -29,7 +29,9 @@ public class Company {
     @ApiModelProperty(value="是否为核心企业，是1否0")
     private int core;
 
-    @ApiModelProperty(value="企业类型")
+//    @ApiModelProperty(value="企业类型")
+    @ApiModelProperty(value="社群划分结果")
+
     private int type;
 
     public Company(String companyName, double capital, double nodeWeight) {

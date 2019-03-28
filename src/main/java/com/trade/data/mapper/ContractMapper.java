@@ -20,8 +20,12 @@ public interface ContractMapper {
     List<Contract> getContractByContractId(@Param("contractId") String contractId);
 
     @Select("select * from Contract where partyAName=#{companyName} or partyBName=#{companyName}")
-    List<Contract> getContractsOfCompanyByCompanyName(@Param("companyName") String companyName);
+  List<Contract> getContractsOfCompanyByCompanyName(@Param("companyName") String companyName);
 
-    @Select("select * from Contract")
+  @Select("select SUM(*) from Contract where partyAName=#{companyName} or partyBName=#{companyName}")
+  int countContractsOfCompanyByCompanyName(@Param("companyName") String companyName);
+
+
+  @Select("select * from Contract")
     List<Contract> getAllContracts();
 }

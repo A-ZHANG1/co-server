@@ -162,16 +162,16 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public GeneralResponse<List<Contract>> randomizeContract() {
-        GeneralResponse<List<Contract>> resp=new GeneralResponse<>();
-        List<Company> allCompanies=companyMapper.getCompanies();
+
+        List<Company> allCompanies = companyMapper.getCompanies();
 //        List<Contract> contractList = new ArrayList<>();
 
-        int range=allCompanies.size();
+        int range = allCompanies.size();
 
-        for(int i =0;i<1000;i++){
+        for(int i = 0; i < 1000 ; i++ ){
 
-            int partyAId=(int)(Math.random()*range) + 1;
-            int partyBId=(int)(Math.random()*range) + 1;
+            int partyAId = (int)(Math.random()*range) + 1;
+            int partyBId = (int)(Math.random()*range) + 1;
 
             while(partyBId == partyAId){
                 partyBId = (int)(Math.random()*range);
@@ -179,11 +179,12 @@ public class ContractServiceImpl implements ContractService{
 
             Contract newContract = this.generateContract(partyAId,partyBId);
             contractList.add(newContract);
-            contractMapper.createContract(newContract);
+//            contractMapper.createContract(newContract);
         }
         this.setLinks();
 
-        resp.setObj(contractList);
+      GeneralResponse<List<Contract>> resp = new GeneralResponse<>();
+      resp.setObj(contractList);
         return resp;
     }
 
